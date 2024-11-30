@@ -1,9 +1,10 @@
 package com.example.business;
 
-import com.example.business.repository.JdbcMemberRepository;
-import com.example.business.repository.MemberRepository;
-import com.example.business.repository.MemoryMemberRepository;
+import com.example.business.repository.*;
 import com.example.business.service.MemberService;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,10 +15,10 @@ import javax.sql.DataSource;
 public class SpringConfig {
 
     private DataSource dataSource;
+    private EntityManager em;
 
-    @Autowired
-    public SpringConfig(DataSource dataSource) {
-        this.dataSource = dataSource;
+    public SpringConfig(DataSource dataSource, EntityManager em) {
+        this.dataSource = dataSource;this.em = em;
     }
 
     @Bean
@@ -28,6 +29,9 @@ public class SpringConfig {
     @Bean
     public MemberRepository memberRepository() {
         //return new MemoryMemberRepository();
-        return new JdbcMemberRepository(dataSource);
+        //return new JdbcMemberRepository(dataSource);
+        //return new JdbcTemplateMemberRepository(dataSource);
+        return new JpaMemberRepository(em);
+
     }
 }
